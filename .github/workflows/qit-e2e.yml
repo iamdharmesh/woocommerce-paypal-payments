@@ -59,7 +59,7 @@ jobs:
     - name: Install node dependencies
       if: ${{ steps.node-cache.outputs.cache-hit == false }}
       shell: bash
-      run: npm ci
+      run: npm i
 
     # Build
     - name: Build plugin package
