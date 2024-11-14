@@ -60,7 +60,7 @@ export const acceptTerms = async ( page ) => {
 };
 
 export const expectOrderReceivedPage = async ( page ) => {
-	await page.waitForURL( '**/order-received/**', { timeout: 60000 } );
+	await page.waitForURL( '**/order-received/**', { timeout: 30000 } );
 	const title = await page.locator( '.entry-title' );
 	await expect( title ).toHaveText( 'Order received' );
 };

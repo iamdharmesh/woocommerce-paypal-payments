@@ -65,8 +65,7 @@ test.skip( 'PayPal add payment method', async ( { page } ) => {
 	} );
 } );
 
-// TODO: Skipping this tests as of now as it is failing, need to investigate and fix it (getting validationError error in js console).
-test.skip( 'ACDC add payment method', async ( { page } ) => {
+test( 'ACDC add payment method', async ( { page } ) => {
 	await loginAsCustomer( page );
 	await page.goto( '/my-account/add-payment-method' );
 
