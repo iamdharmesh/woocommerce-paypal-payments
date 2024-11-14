@@ -1,0 +1,82 @@
+name: QIT E2E tests
+
+on:
+  pull_request
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+
+    name: QIT E2E tests
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    # PHP
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 7.4
+        tools: composer
+        coverage: none
+
+    - name: Cache Composer deps
+      id: composer-cache
+      uses: actions/cache@v4
+      with:
+        path: ./vendor
+        key: ${{ runner.os }}-vendor-${{ hashFiles('composer.lock') }}
+
+    - name: Install composer dependencies
+      if: ${{ steps.composer-cache.outputs.cache-hit == false }}
+      shell: bash
+      run: composer install --no-progress
+
+    - name: Add partner for QIT
+      run: ./vendor/bin/qit partner:add --user='${{ secrets.PARTNER_USER }}' --application_password='${{ secrets.PARTNER_SECRET }}'
+
+    # Node
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version-file: '.nvmrc'
+
+    - name: Cache Node deps
+      id: node-cache
+      uses: actions/cache@v4
+      with:
+        path: |
+          ./node_modules
+          ~/.cache/ms-playwright
+        key: ${{ runner.os }}-node_modules-${{ hashFiles('package-lock.json') }}
+
+    - name: Install node dependencies
+      if: ${{ steps.node-cache.outputs.cache-hit == false }}
+      shell: bash
+      run: npm ci
+
+    # Build
+    - name: Build plugin package
+      shell: bash
+      run: |
+        npm run build
+
+    # E2E test environment
+    - name: Fill in .env
+      run: |
+        echo 'PAYPAL_MERCHANT_ID="${{ secrets.PAYPAL_MERCHANT_ID }}"' >> .env
+        echo 'PAYPAL_MERCHANT_EMAIL="${{ secrets.PAYPAL_MERCHANT_EMAIL }}"' >> .env
+        echo 'PAYPAL_CLIENT_ID="${{ secrets.PAYPAL_CLIENT_ID }}"' >> .env
+        echo 'PAYPAL_CLIENT_SECRET="${{ secrets.PAYPAL_CLIENT_SECRET }}"' >> .env
+        echo 'PAYPAL_CUSTOMER_EMAIL="${{ secrets.PAYPAL_CUSTOMER_EMAIL }}"' >> .env
+        echo 'PAYPAL_CUSTOMER_PASSWORD="${{ secrets.PAYPAL_CUSTOMER_PASSWORD }}"' >> .env
+
+    - name: Run E2E tests
+      shell: bash
+      run: npm run test:e2e -- --env_file .env
