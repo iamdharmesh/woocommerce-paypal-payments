@@ -1,5 +1,5 @@
 const { test, expect } = require( '@playwright/test' );
-const { serverExec } = require( './utils/server' );
+const qit = require( '/qitHelpers' );
 const {
 	fillCheckoutForm,
 	expectOrderReceivedPage,
@@ -10,13 +10,7 @@ const {
 	completePaypalPayment,
 } = require( './utils/paypal-popup' );
 
-const {
-	CREDIT_CARD_NUMBER,
-	CREDIT_CARD_CVV,
-	PRODUCT_URL,
-	CHECKOUT_URL,
-	CHECKOUT_PAGE_ID,
-} = process.env;
+const config = require( '../config/config.json' );
 
 async function expectContinuation( page ) {
 	await expect(
@@ -28,25 +22,23 @@ async function expectContinuation( page ) {
 
 async function completeContinuation( page ) {
 	await expectContinuation( page );
-
-	await Promise.all( [
-		page.waitForNavigation(),
-		page.locator( '#place_order' ).click(),
-	] );
+	await page.locator( '#place_order' ).click();
 }
 
-test.beforeAll( async ( { browser } ) => {
-	await serverExec(
-		'wp option update woocommerce_checkout_page_id ' + CHECKOUT_PAGE_ID
+test.slow(); // Make sure that test have enough time to complete.
+
+test.beforeAll( async ( {} ) => {
+	await qit.wp(
+		`option update woocommerce_checkout_page_id "${ qit.getEnv(
+			'CHECKOUT_PAGE_ID'
+		) }"`
 	);
 } );
 
 test( 'PayPal button place order from Product page', async ( { page } ) => {
-	await serverExec(
-		'wp pcp settings update blocks_final_review_enabled true'
-	);
+	await qit.wp( 'pcp settings update blocks_final_review_enabled true' );
 
-	await page.goto( PRODUCT_URL );
+	await page.goto( '/product/simple-product' );
 
 	const popup = await openPaypalPopup( page );
 
@@ -64,10 +56,10 @@ test( 'PayPal button place order from Product page', async ( { page } ) => {
 test( 'Advanced Credit and Debit Card place order from Checkout page', async ( {
 	page,
 } ) => {
-	await page.goto( PRODUCT_URL );
+	await page.goto( '/product/simple-product' );
 	await page.locator( '.single_add_to_cart_button' ).click();
 
-	await page.goto( CHECKOUT_URL );
+	await page.goto( `/?p=${ qit.getEnv( 'CHECKOUT_PAGE_ID' ) }` );
 	await fillCheckoutForm( page );
 
 	await page.click( 'text=Credit Cards' );
@@ -76,22 +68,22 @@ test( 'Advanced Credit and Debit Card place order from Checkout page', async ( {
 		.frameLocator( 'iframe[title="paypal_card_expiry_field"]' )
 		.locator( 'input.card-field-expiry' );
 	await expirationDate.click();
-	await page.keyboard.type( '01/42' );
+	await page.keyboard.type( '0' );
+	await page.keyboard.type( '1' );
+	await page.keyboard.type( '4' );
+	await page.keyboard.type( '2' );
 
 	const creditCardNumber = await page
 		.frameLocator( '[title="paypal_card_number_field"]' )
 		.locator( '.card-field-number' );
-	await creditCardNumber.fill( CREDIT_CARD_NUMBER );
+	await creditCardNumber.fill( config.card.number );
 
 	const cvv = await page
 		.frameLocator( '[title="paypal_card_cvv_field"]' )
 		.locator( '.card-field-cvv' );
-	await cvv.fill( CREDIT_CARD_CVV );
+	await cvv.fill( config.card.cvc );
 
-	await Promise.all( [
-		page.waitForNavigation(),
-		page.locator( '.ppcp-dcc-order-button' ).click(),
-	] );
+	await page.locator( '.ppcp-dcc-order-button' ).click();
 
 	await expectOrderReceivedPage( page );
 } );

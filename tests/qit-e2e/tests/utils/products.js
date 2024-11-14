@@ -1,18 +1,14 @@
-import {loginAsAdmin} from "./user";
+import qit from '/qitHelpers';
 import {expect} from "@playwright/test";
 
 const wcApi = require('@woocommerce/woocommerce-rest-api').default;
-const {
-    BASEURL,
-    WP_MERCHANT_USER,
-    WP_MERCHANT_PASSWORD,
-} = process.env;
+const config = require( '/qit/tests/e2e/qit-playwright.config' );
 
 const wc = () => {
     return new wcApi({
-        url: BASEURL,
-        consumerKey: WP_MERCHANT_USER,
-        consumerSecret: WP_MERCHANT_PASSWORD,
+        url: config.use.baseURL,
+        consumerKey: qit.getEnv('CONSUMER_KEY'),
+        consumerSecret: qit.getEnv('CONSUMER_SECRET'),
         version: 'wc/v3',
     });
 }
@@ -51,7 +47,7 @@ export const deleteProduct = async (id) => {
 }
 
 export const updateProductUi = async (id, page) => {
-    await loginAsAdmin(page);
+    await qit.loginAsAdmin(page);
     await page.goto(`/wp-admin/post.php?post=${id}&action=edit`)
     await page.locator('#publish').click();
     await expect(page.getByText('Product updated.')).toBeVisible();

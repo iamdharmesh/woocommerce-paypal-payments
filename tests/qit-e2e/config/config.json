@@ -1,0 +1,21 @@
+{
+    "customer": {
+        "username": "customer",
+        "password": "password",
+        "first_name": "John",
+		"last_name": "Doe",
+		"country": "US",
+		"address": "addr 1",
+		"city": "San Francisco",
+		"state": "CA",
+		"postcode": "94107",
+		"phone": "123456789",
+		"email": "john.doe@example.com"
+    },
+    "apm_id": "paypal",
+    "card" : {
+        "number": "4111111111111111",
+        "expiration": "01/42",
+        "cvc": "123"
+    }
+}
