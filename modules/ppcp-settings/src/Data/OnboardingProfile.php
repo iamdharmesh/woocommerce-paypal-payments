@@ -30,6 +30,13 @@ class OnboardingProfile extends AbstractDataModel {
 	protected const OPTION_KEY = 'woocommerce-ppcp-data-onboarding';
 
 	/**
+	 * List of customization flags, provided by the server (read-only).
+	 *
+	 * @var array
+	 */
+	protected array $flags = array();
+
+	/**
 	 * Constructor.
 	 *
 	 * @param bool $can_use_casual_selling Whether casual selling is enabled in the store's country.
@@ -45,9 +52,9 @@ class OnboardingProfile extends AbstractDataModel {
 	) {
 		parent::__construct();
 
-		$this->data['can_use_casual_selling'] = $can_use_casual_selling;
-		$this->data['can_use_vaulting']       = $can_use_vaulting;
-		$this->data['can_use_card_payments']  = $can_use_card_payments;
+		$this->flags['can_use_casual_selling'] = $can_use_casual_selling;
+		$this->flags['can_use_vaulting']       = $can_use_vaulting;
+		$this->flags['can_use_card_payments']  = $can_use_card_payments;
 	}
 
 	/**
@@ -57,18 +64,36 @@ class OnboardingProfile extends AbstractDataModel {
 	 */
 	protected function get_defaults() : array {
 		return array(
-			'step'                   => 0,
-			'use_sandbox'            => false,
-			'use_manual_connection'  => false,
-			'client_id'              => '',
-			'client_secret'          => '',
-			'can_use_casual_selling' => null,
-			'can_use_vaulting'       => null,
-			'can_use_card_payments'  => null,
+			'completed'             => false,
+			'step'                  => 0,
+			'use_sandbox'           => false,
+			'use_manual_connection' => false,
+			'client_id'             => '',
+			'client_secret'         => '',
+			'is_casual_seller'      => null,
+			'products'              => array(),
 		);
 	}
 
 	// -----
+
+	/**
+	 * Gets the 'completed' flag.
+	 *
+	 * @return bool
+	 */
+	public function get_completed() : bool {
+		return (bool) $this->data['completed'];
+	}
+
+	/**
+	 * Sets the 'completed' flag.
+	 *
+	 * @param bool $step Whether the onboarding process has been completed.
+	 */
+	public function set_completed( bool $step ) : void {
+		$this->data['completed'] = $step;
+	}
 
 	/**
 	 * Gets the 'step' setting.
@@ -82,7 +107,7 @@ class OnboardingProfile extends AbstractDataModel {
 	/**
 	 * Sets the 'step' setting.
 	 *
-	 * @param int $step Whether to use sandbox mode.
+	 * @param int $step The current onboarding step.
 	 */
 	public function set_step( int $step ) : void {
 		$this->data['step'] = $step;
@@ -93,7 +118,7 @@ class OnboardingProfile extends AbstractDataModel {
 	 *
 	 * @return bool
 	 */
-	public function get_use_sandbox() : bool {
+	public function get_sandbox() : bool {
 		return (bool) $this->data['use_sandbox'];
 	}
 
@@ -102,7 +127,7 @@ class OnboardingProfile extends AbstractDataModel {
 	 *
 	 * @param bool $use_sandbox Whether to use sandbox mode.
 	 */
-	public function set_use_sandbox( bool $use_sandbox ) : void {
+	public function set_sandbox( bool $use_sandbox ) : void {
 		$this->data['use_sandbox'] = $use_sandbox;
 	}
 
@@ -111,7 +136,7 @@ class OnboardingProfile extends AbstractDataModel {
 	 *
 	 * @return bool
 	 */
-	public function get_use_manual_connection() : bool {
+	public function get_manual_connection() : bool {
 		return (bool) $this->data['use_manual_connection'];
 	}
 
@@ -120,7 +145,7 @@ class OnboardingProfile extends AbstractDataModel {
 	 *
 	 * @param bool $use_manual_connection Whether to use manual connection.
 	 */
-	public function set_use_manual_connection( bool $use_manual_connection ) : void {
+	public function set_manual_connection( bool $use_manual_connection ) : void {
 		$this->data['use_manual_connection'] = $use_manual_connection;
 	}
 
@@ -161,29 +186,47 @@ class OnboardingProfile extends AbstractDataModel {
 	}
 
 	/**
-	 * Gets whether casual selling can be used.
+	 * Gets the casual seller flag.
 	 *
-	 * @return bool
+	 * @return bool|null
 	 */
-	public function get_can_use_casual_selling() : bool {
-		return (bool) $this->data['can_use_casual_selling'];
+	public function get_casual_seller() : ?bool {
+		return $this->data['is_casual_seller'];
 	}
 
 	/**
-	 * Gets whether vaulting can be used.
+	 * Sets the casual-seller flag.
 	 *
-	 * @return bool
+	 * @param bool|null $casual_seller Whether the merchant uses a personal account for selling.
 	 */
-	public function get_can_use_vaulting() : bool {
-		return (bool) $this->data['can_use_vaulting'];
+	public function set_casual_seller( ?bool $casual_seller ) : void {
+		$this->data['is_casual_seller'] = $casual_seller;
 	}
 
 	/**
-	 * Gets whether Credit Card payments can be used.
+	 * Gets the active product types for this store.
 	 *
-	 * @return bool
+	 * @return string[]
 	 */
-	public function get_can_use_card_payments() : bool {
-		return (bool) $this->data['can_use_card_payments'];
+	public function get_products() : array {
+		return $this->data['products'];
+	}
+
+	/**
+	 * Sets the list of active product types.
+	 *
+	 * @param string[] $products Any of ['virtual'|'physical'|'subscriptions'].
+	 */
+	public function set_products( array $products ) : void {
+		$this->data['products'] = $products;
+	}
+
+	/**
+	 * Returns the list of read-only customization flags
+	 *
+	 * @return array
+	 */
+	public function get_flags() : array {
+		return $this->flags;
 	}
 }

@@ -1,56 +1,47 @@
+import { useCallback, useEffect, useState } from '@wordpress/element';
 import { TabPanel } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
-import TabDashboard from '../Screens/Dashboard/TabDashboard';
-import TabPaymentMethods from '../Screens/Dashboard/TabPaymentMethods';
-import TabSettings from '../Screens/Dashboard/TabSettings';
-import TabStyling from '../Screens/Dashboard/TabStyling';
+import { getQuery, updateQueryString } from '@woocommerce/navigation';
 
-const TAB_DASHBOARD = 'TabDashboard';
-const TAB_PAYMENT_METHODS = 'TabPaymentMethods';
-const TAB_SETTINGS = 'TabSettings';
-const TAB_STYLING = 'TabStyling';
+const TabNavigation = ( { tabs } ) => {
+	const { panel } = getQuery();
 
-const TabNavigation = () => {
-	const tabComponents = {
-		[ TAB_DASHBOARD ]: TabDashboard,
-		[ TAB_PAYMENT_METHODS ]: TabPaymentMethods,
-		[ TAB_SETTINGS ]: TabSettings,
-		[ TAB_STYLING ]: TabStyling,
+	const isValidTab = ( tabsList, checkTab ) => {
+		return tabsList.some( ( tab ) => tab.name === checkTab );
 	};
+
+	const getValidInitialPanel = () => {
+		if ( ! panel || ! isValidTab( tabs, panel ) ) {
+			return tabs[ 0 ].name;
+		}
+		return panel;
+	};
+
+	const [ activePanel, setActivePanel ] = useState( getValidInitialPanel );
+
+	const updateActivePanel = useCallback(
+		( tabName ) => {
+			if ( isValidTab( tabs, tabName ) ) {
+				setActivePanel( tabName );
+			} else {
+				console.warn( `Invalid tab name: ${ tabName }` );
+			}
+		},
+		[ tabs ]
+	);
+
+	useEffect( () => {
+		updateQueryString( { panel: activePanel }, '/', getQuery() );
+	}, [ activePanel ] );
 
 	return (
 		<TabPanel
-			className="my-tab-panel"
-			activeClass="active-tab"
-			tabs={ [
-				{
-					name: TAB_DASHBOARD,
-					title: __( 'Dashboard', 'woocommerce-paypal-payments' ),
-					className: 'ppcp-r-tab-dashboard',
-				},
-				{
-					name: TAB_PAYMENT_METHODS,
-					title: __(
-						'Payment Methods',
-						'woocommerce-paypal-payments'
-					),
-					className: 'ppcp-r-tab-payment-methods',
-				},
-				{
-					name: TAB_SETTINGS,
-					title: __( 'Settings', 'woocommerce-paypal-payments' ),
-					className: 'ppcp-r-tab-settings',
-				},
-				{
-					name: TAB_STYLING,
-					title: __( 'Styling', 'woocommerce-paypal-payments' ),
-					className: 'ppcp-r-tab-styling',
-				},
-			] }
+			className={ `ppcp-r-tabs ${ activePanel }` }
+			initialTabName={ activePanel }
+			onSelect={ updateActivePanel }
+			tabs={ tabs }
 		>
 			{ ( tab ) => {
-				const Component = tabComponents[ tab.name ];
-				return <Component />;
+				return tab.component || <>{ tab.title ?? tab.name }</>;
 			} }
 		</TabPanel>
 	);

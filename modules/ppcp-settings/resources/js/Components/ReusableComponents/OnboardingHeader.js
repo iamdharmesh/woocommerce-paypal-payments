@@ -3,7 +3,7 @@ import data from '../../utils/data';
 const OnboardingHeader = ( props ) => {
 	return (
 		<section className="ppcp-r-onboarding-header">
-			<div className="ppcp-r-onboarding-header__gradient">
+			<div className="ppcp-r-onboarding-header__logo">
 				<div className="ppcp-r-onboarding-header__logo-wrapper">
 					{ data().getImage( 'logo-paypal.svg' ) }
 				</div>
@@ -13,9 +13,10 @@ const OnboardingHeader = ( props ) => {
 					{ props.title }
 				</h1>
 				{ props.description && (
-					<p className="ppcp-r-onboarding-header__description">
-						{ props.description }
-					</p>
+					<p
+                        className="ppcp-r-onboarding-header__description"
+                        dangerouslySetInnerHTML={ { __html: props.description, } }
+					></p>
 				) }
 			</div>
 		</section>

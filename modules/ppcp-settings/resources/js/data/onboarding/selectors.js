@@ -13,6 +13,10 @@ export const getPersistentData = ( state ) => {
 };
 
 export const getTransientData = ( state ) => {
-	const { data, ...transientState } = getOnboardingState( state );
+	const { data, flags, ...transientState } = getOnboardingState( state );
 	return transientState || EMPTY_OBJ;
+};
+
+export const getFlags = ( state ) => {
+	return getOnboardingState( state ).flags || EMPTY_OBJ;
 };

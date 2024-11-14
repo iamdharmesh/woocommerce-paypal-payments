@@ -1,6 +1,3 @@
-export const PAGE_ONBOARDING = 'onboarding';
-export const PAGE_SETTINGS = 'settings';
-
 const Container = ( { isCard = true, page, children } ) => {
 	let className = 'ppcp-r-container';
 

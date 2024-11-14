@@ -82,6 +82,10 @@
 	&__checkbox-presentation {
 		@include fake-input-field(2px);
 	}
+	&__additional-content{
+		position: relative;
+		z-index: 1;
+	}
 
 	@media screen and (max-width: 480px) {
 		gap: 16px;

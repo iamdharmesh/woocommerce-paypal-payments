@@ -136,7 +136,7 @@ class PayPalBearerTest extends TestCase
         $key = 'key';
         $secret = 'secret';
         $logger = Mockery::mock(LoggerInterface::class);
-        $logger->shouldNotReceive('log');
+        $logger->shouldNotReceive('warning');
         $settings = Mockery::mock(Settings::class);
         $settings->shouldReceive('has')->andReturn(true);
         $settings->shouldReceive('get')->andReturn('');
@@ -159,7 +159,7 @@ class PayPalBearerTest extends TestCase
         $key = 'key';
         $secret = 'secret';
         $logger = Mockery::mock(LoggerInterface::class);
-        $logger->shouldReceive('log');
+        $logger->shouldReceive('warning');
         $logger->shouldReceive('debug');
         $settings = Mockery::mock(Settings::class);
         $settings->shouldReceive('has')->andReturn(true);
@@ -209,7 +209,7 @@ class PayPalBearerTest extends TestCase
         $key = 'key';
         $secret = 'secret';
         $logger = Mockery::mock(LoggerInterface::class);
-        $logger->shouldReceive('log');
+        $logger->shouldReceive('warning');
         $logger->shouldReceive('debug');
         $settings = Mockery::mock(Settings::class);
         $settings->shouldReceive('has')->andReturn(true);

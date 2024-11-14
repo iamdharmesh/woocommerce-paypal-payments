@@ -9,14 +9,21 @@
 	@import './components/reusable-components/text-control';
 	@import './components/reusable-components/separator';
 	@import './components/reusable-components/payment-method-icons';
+	@import "./components/reusable-components/payment-method-item";
 	@import './components/reusable-components/settings-wrapper';
 	@import './components/reusable-components/select-box';
+	@import './components/reusable-components/tab-navigation';
 	@import './components/reusable-components/navigation';
-	@import './components/reusable-components/tabs';
 	@import './components/reusable-components/fields';
 	@import './components/reusable-components/title-badge';
-	@import './components/screens/onboarding/step-welcome';
-	@import './components/screens/onboarding/step-business';
-	@import './components/screens/onboarding/step-products';
+	@import './components/reusable-components/accordion-section';
+	@import './components/reusable-components/badge-box';
+	@import './components/reusable-components/spinner-overlay';
+	@import './components/reusable-components/welcome-docs';
+	@import './components/screens/onboarding';
 	@import './components/screens/dashboard/tab-dashboard';
+	@import './components/screens/dashboard/tab-payment-methods';
 }
+
+@import './components/reusable-components/payment-method-modal';
+@import './components/screens/onboarding-global';

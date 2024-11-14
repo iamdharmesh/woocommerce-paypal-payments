@@ -2,7 +2,7 @@ import { dispatch } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { apiFetch } from '@wordpress/data-controls';
 import { NAMESPACE } from '../constants';
-import { setOnboardingDetails } from './actions';
+import { setIsReady, setOnboardingDetails } from './actions';
 
 /**
  * Retrieve settings from the site's REST API.
@@ -13,6 +13,7 @@ export function* getPersistentData() {
 	try {
 		const result = yield apiFetch( { path } );
 		yield setOnboardingDetails( result );
+		yield setIsReady( true );
 	} catch ( e ) {
 		yield dispatch( 'core/notices' ).createErrorNotice(
 			__(

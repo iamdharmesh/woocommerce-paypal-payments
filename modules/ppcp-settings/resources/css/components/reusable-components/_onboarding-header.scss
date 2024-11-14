@@ -1,34 +1,19 @@
 .ppcp-r-onboarding-header{
 	margin: 0 0 32px 0;
 
-	&__gradient {
-		background: $gradient-header;
-		width: 100%;
-		height: 112px;
-		position: relative;
-		margin-bottom: 55px;
+	&__logo {
+		text-align: center;
+		margin-bottom: 20px;
 	}
 
 	&__logo-wrapper {
-		width: 110px;
-		height: 110px;
-		background-color: $color-white;
-		border-radius: 110px;
-		position: absolute;
-		left: calc(50% - 55px);
-		bottom: -55px;
-
 		img {
-			width: 56px;
-			position: absolute;
-			left: 50%;
-			top: 50%;
-			transform: translate(-50%, -50%);
+			width: 110px;
+			height: 38px;
 		}
 	}
 
 	&__content {
-		max-width: 458px;
 		margin: 0 auto;
 		display: flex;
 		flex-direction: column;
@@ -37,16 +22,14 @@
 	}
 
 	&__title {
-		@include font(20, 28, 700);
-		color: $color-blue;
+		@include font(24, 32, 400);
 		margin: 0 0 4px 0;
 		text-align: center;
 	}
 
 	&__description {
-		color: $color-gray-800;
-		@include font(14, 20, 400);
-		margin: 0;
+		@include font(14, 22, 400);
+		margin: 0 20%;
 		text-align: center;
 	}
 }

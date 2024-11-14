@@ -4,6 +4,28 @@ import ACTION_TYPES from './action-types';
 import { NAMESPACE, STORE_NAME } from '../constants';
 
 /**
+ * Special. Resets all values in the onboarding store to initial defaults.
+ *
+ * @return {{type: string}} The action.
+ */
+export const resetOnboarding = () => {
+	return { type: ACTION_TYPES.RESET_ONBOARDING };
+};
+
+/**
+ * Non-persistent. Marks the onboarding details as "ready", i.e., fully initialized.
+ *
+ * @param {boolean} isReady
+ * @return {{type: string, isReady}} The action.
+ */
+export const setIsReady = ( isReady ) => {
+	return {
+		type: ACTION_TYPES.SET_ONBOARDING_IS_READY,
+		isReady,
+	};
+};
+
+/**
  * Non-persistent. Changes the "saving" flag.
  *
  * @param {boolean} isSaving
@@ -11,21 +33,47 @@ import { NAMESPACE, STORE_NAME } from '../constants';
  */
 export const setIsSaving = ( isSaving ) => {
 	return {
-		type: ACTION_TYPES.SET_IS_SAVING_ONBOARDING_DETAILS,
+		type: ACTION_TYPES.SET_IS_SAVING_ONBOARDING,
 		isSaving,
+	};
+};
+
+/**
+ * Non-persistent. Changes the "manual connection is busy" flag.
+ *
+ * @param {boolean} isBusy
+ * @return {{type: string, isBusy}} The action.
+ */
+export const setManualConnectionIsBusy = ( isBusy ) => {
+	return {
+		type: ACTION_TYPES.SET_MANUAL_CONNECTION_BUSY,
+		isBusy,
 	};
 };
 
 /**
  * Persistent. Set the full onboarding details, usually during app initialization.
  *
- * @param {Object} payload
+ * @param {{data: {}, flags?: {}}} payload
  * @return {{type: string, payload}} The action.
  */
 export const setOnboardingDetails = ( payload ) => {
 	return {
 		type: ACTION_TYPES.SET_ONBOARDING_DETAILS,
 		payload,
+	};
+};
+
+/**
+ * Persistent.Set the "onboarding completed" flag which shows or hides the wizard.
+ *
+ * @param {boolean} completed
+ * @return {{type: string, payload}} The action.
+ */
+export const setCompleted = ( completed ) => {
+	return {
+		type: ACTION_TYPES.SET_ONBOARDING_COMPLETED,
+		completed,
 	};
 };
 
@@ -95,9 +143,72 @@ export const setClientSecret = ( clientSecret ) => {
 };
 
 /**
+ * Persistent. Sets the "isCasualSeller" value.
+ *
+ * @param {boolean} isCasualSeller
+ * @return {{type: string, isCasualSeller}} The action.
+ */
+export const setIsCasualSeller = ( isCasualSeller ) => {
+	return {
+		type: ACTION_TYPES.SET_IS_CASUAL_SELLER,
+		isCasualSeller,
+	};
+};
+
+/**
+ * Persistent. Sets the "products" array.
+ *
+ * @param {string[]} products
+ * @return {{type: string, products}} The action.
+ */
+export const setProducts = ( products ) => {
+	return {
+		type: ACTION_TYPES.SET_PRODUCTS,
+		products,
+	};
+};
+
+/**
+ * Attempts to establish a connection using client ID and secret via the server-side
+ * connection endpoint.
+ *
+ * @return {Object} The server response object
+ */
+export function* connectViaIdAndSecret() {
+	let result = null;
+
+	try {
+		const path = `${ NAMESPACE }/connect_manual`;
+		const { clientId, clientSecret, useSandbox } =
+			yield select( STORE_NAME ).getPersistentData();
+
+		yield setManualConnectionIsBusy( true );
+
+		result = yield apiFetch( {
+			path,
+			method: 'POST',
+			data: {
+				clientId,
+				clientSecret,
+				useSandbox,
+			},
+		} );
+	} catch ( e ) {
+		result = {
+			success: false,
+			error: e,
+		};
+	} finally {
+		yield setManualConnectionIsBusy( false );
+	}
+
+	return result;
+}
+
+/**
  * Saves the persistent details to the WP database.
  *
- * @return {any} A generator function that handles the saving process.
+ * @return {boolean} True, if the values were successfully saved.
  */
 export function* persist() {
 	let error = null;

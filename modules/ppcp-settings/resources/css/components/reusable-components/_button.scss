@@ -1,11 +1,7 @@
 button.components-button, a.components-button {
 	&.is-primary, &.is-secondary {
 		&:not(:disabled) {
-			background-color: $color-blueberry;
-
-			&:hover {
-				background: $gradient-header;
-			}
+			background-color: $color-black;
 		}
 
 		&:disabled {
@@ -16,12 +12,10 @@ button.components-button, a.components-button {
 		border-radius: 2px;
 		padding: 14px 17px;
 		height: auto;
-
-
 	}
 
 	&.is-primary {
-		@include font(13, 16, 500);
+		@include font(13, 20, 400);
 		color:$color-white;
 	}
 

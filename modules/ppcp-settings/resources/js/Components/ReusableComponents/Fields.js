@@ -24,6 +24,7 @@ export const PayPalRdb = ( props ) => {
 	return (
 		<div className="ppcp-r__radio">
 			<input
+				id={ props?.id ? props.id : null }
 				className="ppcp-r__radio-value"
 				type="radio"
 				checked={ props.value === props.currentValue }

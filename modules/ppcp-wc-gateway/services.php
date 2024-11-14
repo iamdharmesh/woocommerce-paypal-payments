@@ -31,6 +31,7 @@ use WooCommerce\PayPalCommerce\WcGateway\Endpoint\RefreshFeatureStatusEndpoint;
 use WooCommerce\PayPalCommerce\WcGateway\Endpoint\VoidOrderEndpoint;
 use WooCommerce\PayPalCommerce\WcGateway\Helper\CartCheckoutDetector;
 use WooCommerce\PayPalCommerce\WcGateway\Helper\FeesUpdater;
+use WooCommerce\PayPalCommerce\WcGateway\Notice\SendOnlyCountryNotice;
 use WooCommerce\PayPalCommerce\WcGateway\Settings\WcTasks\Factory\SimpleRedirectTaskFactory;
 use WooCommerce\PayPalCommerce\WcGateway\Settings\WcTasks\Factory\SimpleRedirectTaskFactoryInterface;
 use WooCommerce\PayPalCommerce\WcGateway\Settings\WcTasks\Registrar\TaskRegistrar;
@@ -376,6 +377,113 @@ return array(
 			$container->get( 'wcgateway.settings.status' )
 		);
 	},
+	'wcgateway.store-country'                              => static function(): string {
+		$location = wc_get_base_location();
+		return $location['country'];
+	},
+	'wcgateway.send-only-message'                          => static function() {
+		return __( "<strong>Important</strong>: Your current WooCommerce store location is in a \"send-only\" country, according to PayPal's policies. Sellers in these countries are unable to receive payments via PayPal. Since receiving payments is essential for using the PayPal Payments extension, you will not be able to connect your PayPal account while operating from a \"send-only\" country. To activate PayPal, please update your WooCommerce store location to a supported region and connect a PayPal account eligible for receiving payments.", 'woocommerce-paypal-payments' );
+	},
+	'wcgateway.send-only-countries'                        => static function() {
+		return array(
+			'AO',
+			'AI',
+			'AM',
+			'AW',
+			'AZ',
+			'BY',
+			'BJ',
+			'BT',
+			'BO',
+			'VG',
+			'BN',
+			'BF',
+			'BI',
+			'CI',
+			'KH',
+			'CM',
+			'CV',
+			'TD',
+			'KM',
+			'CG',
+			'CK',
+			'DJ',
+			'ER',
+			'ET',
+			'FK',
+			'GA',
+			'GM',
+			'GN',
+			'GW',
+			'GY',
+			'KI',
+			'KG',
+			'LA',
+			'MK',
+			'MG',
+			'MV',
+			'ML',
+			'MH',
+			'MR',
+			'YT',
+			'FM',
+			'MN',
+			'ME',
+			'MS',
+			'NA',
+			'NR',
+			'NP',
+			'NE',
+			'NG',
+			'NU',
+			'NF',
+			'PG',
+			'PY',
+			'PN',
+			'RW',
+			'ST',
+			'WS',
+			'SL',
+			'SB',
+			'SO',
+			'SH',
+			'PM',
+			'VC',
+			'SR',
+			'SJ',
+			'TJ',
+			'TZ',
+			'TG',
+			'TO',
+			'TN',
+			'TM',
+			'TV',
+			'UG',
+			'UA',
+			'VA',
+			'WF',
+			'YE',
+			'ZM',
+			'ZW',
+		);
+	},
+	'wcgateway.is-send-only-country'                       => static function( ContainerInterface $container ) {
+		$store_country = $container->get( 'wcgateway.store-country' );
+		$send_only_countries = $container->get( 'wcgateway.send-only-countries' );
+		return in_array( $store_country, $send_only_countries, true );
+	},
+	'wcgateway.notice.send-only-country'                   => static function ( ContainerInterface $container ) {
+		$onboarding_state = $container->get( 'onboarding.state' );
+		assert( $onboarding_state instanceof State );
+		return new SendOnlyCountryNotice(
+			$container->get( 'wcgateway.send-only-message' ),
+			$container->get( 'wcgateway.is-send-only-country' ),
+			$container->get( 'wcgateway.is-ppcp-settings-page' ),
+			$container->get( 'wcgateway.is-wc-gateways-list-page' ),
+			$onboarding_state->current_state()
+		);
+	},
+
 	'wcgateway.notice.authorize-order-action'              =>
 		static function ( ContainerInterface $container ): AuthorizeOrderActionNotice {
 			return new AuthorizeOrderActionNotice();
@@ -1734,6 +1842,24 @@ return array(
 		$button_locations = $container->get( 'wcgateway.button.locations' );
 		unset( $button_locations['mini-cart'] );
 		return array_keys( $button_locations );
+	},
+	'wcgateway.button.recommended-styling-notice'          => static function ( ContainerInterface $container ) : string {
+		if ( CartCheckoutDetector::has_block_checkout() ) {
+			$block_checkout_page_string_html = '<a href="' . esc_url( wc_get_page_permalink( 'checkout' ) ) . '">' . __( 'Checkout block', 'woocommerce-paypal-payments' ) . '</a>';
+		} else {
+			$block_checkout_page_string_html = __( 'Checkout block', 'woocommerce-paypal-payments' );
+		}
+
+		$notice_content = sprintf(
+		/* translators: %1$s: URL to the Checkout edit page. */
+			__(
+				'<span class="highlight">Important:</span> The <code>Cart</code> & <code>Express Checkout</code> <strong>Smart Button Stylings</strong> may be controlled by the %1$s configuration.',
+				'woocommerce-paypal-payments'
+			),
+			$block_checkout_page_string_html
+		);
+
+		return '<div class="ppcp-notice ppcp-notice-warning"><p>' . $notice_content . '</p></div>';
 	},
 	'wcgateway.settings.pay-later.messaging-locations'     => static function( ContainerInterface $container ): array {
 		$button_locations = $container->get( 'wcgateway.button.locations' );

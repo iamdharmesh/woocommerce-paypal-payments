@@ -28,6 +28,10 @@
 		<directory name="modules" />
 		<file name="bootstrap.php" />
 		<file name="woocommerce-paypal-payments.php" />
+		<ignoreFiles>
+			<directory name="node_modules"/>
+			<directory name="modules/*/node_modules"/>
+		</ignoreFiles>
     </projectFiles>
 
     <stubs>

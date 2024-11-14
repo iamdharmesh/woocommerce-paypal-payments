@@ -1,25 +1,19 @@
 .ppcp-r {
+	&-container {
+		max-width: var(--max-container-width, none);
+		margin-left: auto;
+		margin-right: auto;
+	}
 
 	&-inner-container {
-		width: 652px;
-		max-width: 100%;
-		margin: 0 auto;
-		padding: 0 16px;
+		margin-left: auto;
+		margin-right: auto;
+		padding: 0 16px 48px;
 		box-sizing: border-box;
-	}
 
-	&-container {
-		max-width: 1024px;
-		margin: 0 auto;
-
-		&--settings {
-			max-width: 938px;
+		@media screen and (max-width: 480px) {
+			padding-bottom: 36px;
 		}
-	}
-
-	&-card {
-		box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.15);
-		background-color: $color-white;
 	}
 
 	&-settings-card {

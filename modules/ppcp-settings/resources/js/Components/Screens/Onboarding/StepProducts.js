@@ -1,16 +1,19 @@
 import OnboardingHeader from '../../ReusableComponents/OnboardingHeader';
-import Navigation from '../../ReusableComponents/Navigation';
 import { __ } from '@wordpress/i18n';
 import SelectBox from '../../ReusableComponents/SelectBox';
 import SelectBoxWrapper from '../../ReusableComponents/SelectBoxWrapper';
-import { useState } from '@wordpress/element';
+import { useOnboardingStepProducts } from '../../../data';
+import { PRODUCT_TYPES } from '../../../data/constants';
 
-const StepProducts = ( { setStep, currentStep, stepperOrder } ) => {
-	const [ products, setProducts ] = useState( [] );
-	const PRODUCTS_CHECKBOX_GROUP_NAME = 'products';
-	const VIRTUAL_CHECKBOX_VALUE = 'virtual';
-	const PHYSICAL_CHECKBOX_VALUE = 'physical';
-	const SUBSCRIPTIONS_CHECKBOX_VALUE = 'subscriptions';
+const PRODUCTS_CHECKBOX_GROUP_NAME = 'products';
+
+const StepProducts = ( {
+	setStep,
+	currentStep,
+	stepperOrder,
+	setCompleted,
+} ) => {
+	const { products, toggleProduct } = useOnboardingStepProducts();
 
 	return (
 		<div className="ppcp-r-page-products">
@@ -30,8 +33,8 @@ const StepProducts = ( { setStep, currentStep, stepperOrder } ) => {
 						) }
 						icon="icon-product-virtual.svg"
 						name={ PRODUCTS_CHECKBOX_GROUP_NAME }
-						value={ VIRTUAL_CHECKBOX_VALUE }
-						changeCallback={ setProducts }
+						value={ PRODUCT_TYPES.VIRTUAL }
+						changeCallback={ toggleProduct }
 						currentValue={ products }
 						type="checkbox"
 					>
@@ -73,8 +76,8 @@ const StepProducts = ( { setStep, currentStep, stepperOrder } ) => {
 						) }
 						icon="icon-product-physical.svg"
 						name={ PRODUCTS_CHECKBOX_GROUP_NAME }
-						value={ PHYSICAL_CHECKBOX_VALUE }
-						changeCallback={ setProducts }
+						value={ PRODUCT_TYPES.PHYSICAL }
+						changeCallback={ toggleProduct }
 						currentValue={ products }
 						type="checkbox"
 					>
@@ -101,25 +104,22 @@ const StepProducts = ( { setStep, currentStep, stepperOrder } ) => {
 						) }
 						icon="icon-product-subscription.svg"
 						name={ PRODUCTS_CHECKBOX_GROUP_NAME }
-						value={ SUBSCRIPTIONS_CHECKBOX_VALUE }
-						changeCallback={ setProducts }
+						value={ PRODUCT_TYPES.SUBSCRIPTIONS }
+						changeCallback={ toggleProduct }
 						currentValue={ products }
 						type="checkbox"
 					>
-						<a href="#">
+						<a
+							target="__blank"
+							href="https://woocommerce.com/document/woocommerce-paypal-payments/#subscriptions-faq"
+						>
 							{ __(
-								'WooCommerce Subscriptions - TODO missing link',
+								'WooCommerce Subscriptions',
 								'woocommerce-paypal-payments'
 							) }
 						</a>
 					</SelectBox>
 				</SelectBoxWrapper>
-				<Navigation
-					setStep={ setStep }
-					currentStep={ currentStep }
-					stepperOrder={ stepperOrder }
-					canProceeedCallback={ () => products.length > 0 }
-				/>
 			</div>
 		</div>
 	);

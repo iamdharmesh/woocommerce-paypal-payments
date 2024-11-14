@@ -44,6 +44,15 @@ export const initStore = () => {
 
 			console.groupEnd();
 		};
+		window.ppcpSettings.resetStore = () => {
+			wp.data.dispatch( STORE_NAME ).resetOnboarding();
+			wp.data.dispatch( STORE_NAME ).persist();
+		};
+		window.ppcpSettings.startOnboarding = () => {
+			wp.data.dispatch( STORE_NAME ).setCompleted( false );
+			wp.data.dispatch( STORE_NAME ).setOnboardingStep( 0 );
+			wp.data.dispatch( STORE_NAME ).persist();
+		};
 	}
 	/* eslint-enable no-console */
 };

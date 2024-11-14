@@ -65,7 +65,7 @@ class RestEndpoint extends WC_REST_Controller {
 
 			if ( null === $sanitation_cb ) {
 				$sanitized[ $key ] = $value;
-			} elseif ( method_exists( $this, $sanitation_cb ) ) {
+			} elseif ( is_string( $sanitation_cb ) && method_exists( $this, $sanitation_cb ) ) {
 				$sanitized[ $key ] = $this->{$sanitation_cb}( $value );
 			} elseif ( is_callable( $sanitation_cb ) ) {
 				$sanitized[ $key ] = $sanitation_cb( $value );

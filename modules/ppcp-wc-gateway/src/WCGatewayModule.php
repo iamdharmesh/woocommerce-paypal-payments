@@ -24,6 +24,7 @@ use WooCommerce\PayPalCommerce\Vendor\Inpsyde\Modularity\Module\ServiceModule;
 use WooCommerce\PayPalCommerce\WcGateway\Assets\VoidButtonAssets;
 use WooCommerce\PayPalCommerce\WcGateway\Endpoint\RefreshFeatureStatusEndpoint;
 use WooCommerce\PayPalCommerce\WcGateway\Endpoint\VoidOrderEndpoint;
+use WooCommerce\PayPalCommerce\WcGateway\Notice\SendOnlyCountryNotice;
 use WooCommerce\PayPalCommerce\WcGateway\Processor\CreditCardOrderInfoHandlingTrait;
 use WC_Order;
 use WooCommerce\PayPalCommerce\AdminNotices\Repository\Repository;
@@ -94,20 +95,22 @@ class WCGatewayModule implements ServiceModule, ExtendingModule, ExecutableModul
 		$this->register_wc_tasks( $c );
 		$this->register_void_button( $c );
 
-		add_action(
-			'woocommerce_sections_checkout',
-			function() use ( $c ) {
-				$header_renderer = $c->get( 'wcgateway.settings.header-renderer' );
-				assert( $header_renderer instanceof HeaderRenderer );
+		if ( ! $c->get( 'wcgateway.settings.admin-settings-enabled' ) ) {
+			add_action(
+				'woocommerce_sections_checkout',
+				function () use ( $c ) {
+					$header_renderer = $c->get( 'wcgateway.settings.header-renderer' );
+					assert( $header_renderer instanceof HeaderRenderer );
 
-				$section_renderer = $c->get( 'wcgateway.settings.sections-renderer' );
-				assert( $section_renderer instanceof SectionsRenderer );
+					$section_renderer = $c->get( 'wcgateway.settings.sections-renderer' );
+					assert( $section_renderer instanceof SectionsRenderer );
 
-				// phpcs:ignore WordPress.Security.EscapeOutput
-				echo $header_renderer->render() . $section_renderer->render();
-			},
-			20
-		);
+					// phpcs:ignore WordPress.Security.EscapeOutput
+					echo $header_renderer->render() . $section_renderer->render();
+				},
+				20
+			);
+		}
 
 		add_action(
 			'woocommerce_paypal_payments_order_captured',
@@ -233,6 +236,13 @@ class WCGatewayModule implements ServiceModule, ExtendingModule, ExecutableModul
 					if ( $message ) {
 						$notices[] = $message;
 					}
+				}
+
+				$send_only_country_notice = $c->get( 'wcgateway.notice.send-only-country' );
+				assert( $send_only_country_notice instanceof SendOnlyCountryNotice );
+				$message = $send_only_country_notice->message();
+				if ( $message ) {
+					$notices[] = $message;
 				}
 
 				$authorize_order_action = $c->get( 'wcgateway.notice.authorize-order-action' );

@@ -89,10 +89,38 @@ abstract class AbstractDataModel {
 				continue;
 			}
 
-			$setter = "set_$key";
-			if ( method_exists( $this, $setter ) ) {
+			$setter = $this->get_setter_name( $key );
+
+			if ( $setter && method_exists( $this, $setter ) ) {
 				$this->$setter( $value );
 			}
 		}
 	}
+
+	/**
+	 * Generates a setter method name for a given key, stripping the prefix from
+	 * boolean fields (is_, use_, has_).
+	 *
+	 * @param int|string $field_key The key for which to generate a setter name.
+	 *
+	 * @return string The generated setter method name.
+	 */
+	private function get_setter_name( $field_key ) : string {
+		if ( ! is_string( $field_key ) ) {
+			return '';
+		}
+
+		$prefixes_to_strip = array( 'is_', 'use_', 'has_' );
+		$stripped_key      = $field_key;
+
+		foreach ( $prefixes_to_strip as $prefix ) {
+			if ( str_starts_with( $field_key, $prefix ) ) {
+				$stripped_key = substr( $field_key, strlen( $prefix ) );
+				break;
+			}
+		}
+
+		return $stripped_key ? "set_$stripped_key" : '';
+	}
+
 }
