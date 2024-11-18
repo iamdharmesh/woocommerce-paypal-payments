@@ -33,14 +33,6 @@ jobs:
         path: ./vendor
         key: ${{ runner.os }}-vendor-${{ hashFiles('composer.lock') }}
 
-    - name: Install composer dependencies
-      if: ${{ steps.composer-cache.outputs.cache-hit == false }}
-      shell: bash
-      run: composer install --no-progress
-
-    - name: Add partner for QIT
-      run: ./vendor/bin/qit partner:add --user='${{ secrets.PARTNER_USER }}' --application_password='${{ secrets.PARTNER_SECRET }}'
-
     # Node
     - name: Setup Node
       uses: actions/setup-node@v4
@@ -56,16 +48,19 @@ jobs:
           ~/.cache/ms-playwright
         key: ${{ runner.os }}-node_modules-${{ hashFiles('package-lock.json') }}
 
-    - name: Install node dependencies
-      if: ${{ steps.node-cache.outputs.cache-hit == false }}
-      shell: bash
-      run: npm i
-
     # Build
     - name: Build plugin package
       shell: bash
       run: |
         npm run build
+
+    - name: Install composer dependencies
+      if: ${{ steps.composer-cache.outputs.cache-hit == false }}
+      shell: bash
+      run: composer install --no-progress
+
+    - name: Add partner for QIT
+      run: ./vendor/bin/qit partner:add --user='${{ secrets.PARTNER_USER }}' --application_password='${{ secrets.PARTNER_SECRET }}'
 
     # E2E test environment
     - name: Fill in .env
