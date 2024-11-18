@@ -2,22 +2,22 @@
 const { test, expect } = require( '@playwright/test' );
 const qit = require( '/qitHelpers' );
 
-const { loginAsCustomer } = require( './utils/user' );
+const { loginAsCustomer } = require( '../utils/user' );
 const {
 	openPaypalPopup,
 	loginIntoPaypal,
 	openBlockExpressPaypalPopup,
-} = require( './utils/paypal-popup' );
+} = require( '../utils/paypal-popup' );
 const {
 	fillCheckoutForm,
 	expectOrderReceivedPage,
 	clearCart,
-} = require( './utils/checkout' );
+} = require( '../utils/checkout' );
 const {
 	createProduct,
 	deleteProduct,
 	updateProductUi,
-} = require( './utils/products' );
+} = require( '../utils/products' );
 
 async function purchaseSubscriptionFromCart( page ) {
 	await loginAsCustomer( page );

@@ -1,14 +1,14 @@
 const { test } = require( '@playwright/test' );
 const qit = require( '/qitHelpers' );
-const { loginAsCustomer } = require( './utils/user' );
-const { openPaypalPopup, loginIntoPaypal } = require( './utils/paypal-popup' );
+const { loginAsCustomer } = require( '../utils/user' );
+const { openPaypalPopup, loginIntoPaypal } = require( '../utils/paypal-popup' );
 const {
 	expectOrderReceivedPage,
 	fillCheckoutForm,
 	clearCart,
 	blockFillBillingDetails,
-} = require( './utils/checkout' );
-const config = require( '../config/config.json' );
+} = require( '../utils/checkout' );
+const config = require( '../../config/config.json' );
 
 test.slow(); // Make sure that test have enough time to complete.
 
