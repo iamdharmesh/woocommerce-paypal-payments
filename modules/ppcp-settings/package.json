@@ -13,6 +13,7 @@
         "@wordpress/scripts": "^30.3.0"
     },
     "dependencies": {
-        "@woocommerce/settings": "^1.0.0"
+        "@woocommerce/settings": "^1.0.0",
+        "react-select": "^5.8.3"
     }
 }

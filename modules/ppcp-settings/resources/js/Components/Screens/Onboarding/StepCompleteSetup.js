@@ -48,7 +48,9 @@ const StepCompleteSetup = ( {
 					<Button
 						variant="primary"
 						icon={ ButtonIcon }
-						onClick={ () => {} }
+						onClick={ () => {
+							setCompleted( true );
+						} }
 					>
 						{ __(
 							'Connect to PayPal',

@@ -69,15 +69,8 @@
 
 
 		input[type='text'] {
-			padding: 7px 11px;
-			@include font(14, 20, 400);
 			margin: 0;
 			border-color: $color-gray-700;
-		}
-
-		label {
-			@include font(14, 16, 400);
-			color: $color-gray-900;
 		}
 	}
 
@@ -92,9 +85,7 @@
 	}
 
 	.ppcp-r-modal__field-row--save button.is-primary {
-		border-radius: 2px;
-		padding: 6px 12px;
-		@include font(13, 20, 400);
+		@include small-button;
 	}
 
 	&__content-title {
@@ -108,16 +99,5 @@
 		@include font(14, 20, 400);
 		margin: 0 0 24px 0;
 		color: $color-black;
-	}
-
-	&__field-rdb {
-		display: flex;
-		gap: 18px;
-		align-items: center;
-		position: relative;
-		label {
-			@include font(14, 20, 400);
-			color: $color-black;
-		}
 	}
 }

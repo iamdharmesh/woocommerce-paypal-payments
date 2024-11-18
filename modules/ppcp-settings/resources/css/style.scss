@@ -6,7 +6,6 @@
 	@import './components/reusable-components/onboarding-header';
 	@import './components/reusable-components/button';
 	@import './components/reusable-components/settings-toggle-block';
-	@import './components/reusable-components/text-control';
 	@import './components/reusable-components/separator';
 	@import './components/reusable-components/payment-method-icons';
 	@import "./components/reusable-components/payment-method-item";
@@ -23,6 +22,7 @@
 	@import './components/screens/onboarding';
 	@import './components/screens/dashboard/tab-dashboard';
 	@import './components/screens/dashboard/tab-payment-methods';
+	@import 'components/screens/dashboard/tab-settings';
 }
 
 @import './components/reusable-components/payment-method-modal';

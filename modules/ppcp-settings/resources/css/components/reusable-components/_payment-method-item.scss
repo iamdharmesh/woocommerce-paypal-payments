@@ -40,9 +40,7 @@
 		display: block;
 	}
 
-	button {
-		margin-left: auto;
-		@include font(13, 20, 400);
-		padding: 6px 12px !important;
+	button.is-secondary {
+		@include small-button;
 	}
 }

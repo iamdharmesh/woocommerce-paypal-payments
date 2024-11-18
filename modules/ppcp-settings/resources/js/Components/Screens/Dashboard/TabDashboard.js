@@ -11,21 +11,13 @@ import TitleBadge, {
 	TITLE_BADGE_NEGATIVE,
 	TITLE_BADGE_POSITIVE,
 } from '../../ReusableComponents/TitleBadge';
+import ConnectionInfo, {
+	connectionStatusDataDefault,
+} from '../../ReusableComponents/ConnectionInfo';
 
 const TabDashboard = () => {
 	const [ todos, setTodos ] = useState( [] );
 	const [ todosData, setTodosData ] = useState( todosDataDefault );
-	const [ connectionData, setConnectionData ] = useState( {
-		connectionStatus: true,
-		showAllData: false,
-		email: 'bt_us@woocommerce.com',
-		merchantId: 'AT45V2DGMKLRY',
-		clientId: 'BAARTJLxtUNN4d2GMB6Eut3suMDYad72xQA-FntdIFuJ6FmFJITxAY8',
-	} );
-
-	const showAllData = () => {
-		setConnectionData( { ...connectionData, showAllData: true } );
-	};
 
 	return (
 		<div className="ppcp-r-tab-dashboard">
@@ -68,8 +60,7 @@ const TabDashboard = () => {
 				) }
 			>
 				<ConnectionStatus
-					connectionData={ connectionData }
-					showAllData={ showAllData }
+					connectionData={ connectionStatusDataDefault }
 				/>
 				<FeaturesRefresh />
 				{ featuresDefault.map( ( feature ) => {
@@ -82,7 +73,7 @@ const TabDashboard = () => {
 	);
 };
 
-const ConnectionStatus = ( { connectionData, showAllData } ) => {
+const ConnectionStatus = ( { connectionData } ) => {
 	return (
 		<div className="ppcp-r-connection-status">
 			<div className="ppcp-r-connection-status__status">
@@ -118,47 +109,9 @@ const ConnectionStatus = ( { connectionData, showAllData } ) => {
 				</div>
 			</div>
 			{ connectionData.connectionStatus && (
-				<div className="ppcp-r-connection-status__data">
-					<div className="ppcp-r-connection-status__status-row">
-						<strong>
-							{ __(
-								'Email address:',
-								'woocommerce-paypal-payments'
-							) }
-						</strong>
-						<span>{ connectionData.email }</span>
-						{ ! connectionData.showAllData && (
-							<span onClick={ () => showAllData() }>
-								{ data().getImage(
-									'icon-arrow-down.svg',
-									'ppcp-r-connection-status__show-all-data'
-								) }
-							</span>
-						) }
-					</div>
-					{ connectionData.showAllData && (
-						<>
-							<div className="ppcp-r-connection-status__status-row">
-								<strong>
-									{ __(
-										'Merchant ID:',
-										'woocommerce-paypal-payments'
-									) }
-								</strong>
-								<span>{ connectionData.merchantId }</span>
-							</div>
-							<div className="ppcp-r-connection-status__status-row">
-								<strong>
-									{ __(
-										'Client ID:',
-										'woocommerce-paypal-payments'
-									) }
-								</strong>
-								<span>{ connectionData.clientId }</span>
-							</div>
-						</>
-					) }
-				</div>
+				<ConnectionInfo
+					connectionStatusDataDefault={ connectionStatusDataDefault }
+				/>
 			) }
 		</div>
 	);

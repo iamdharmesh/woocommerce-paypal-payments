@@ -40,10 +40,17 @@
 	font-style: italic;
 }
 
+@mixin primaryFont{
+	font-family: "PayPalPro", sans-serif;
+}
+
+* {
+	box-sizing: border-box;
+}
+
 & {
 	font-family: "PayPalPro", sans-serif;
 	-webkit-font-smoothing: antialiased;
-	box-sizing: border-box;
 	color: $color-gray-700;
 }
 

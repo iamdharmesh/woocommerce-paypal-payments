@@ -86,18 +86,13 @@
 		margin: 0 0 8px 0;
 
 		strong {
-			@include font(14, 20, 700);
+			@include font(14, 24, 700);
 			color: $color-black;
 		}
 	}
 
 	&__show-all-data {
 		margin-left: 12px;
-
-		&:hover {
-			cursor: pointer;
-			opacity: 0.8;
-		}
 	}
 
 	&__status-label {
@@ -113,20 +108,36 @@
 		gap: 12px;
 	}
 
+	&__status-toggle--toggled{
+		.ppcp-r-connection-status__show-all-data{
+			transform:rotate(180deg);
+		}
+	}
+
 	&__status-row {
 		display: flex;
 		align-items: center;
-
+		*{
+			user-select: none;
+		}
 		strong {
-			@include font(14, 20, 600);
+			@include font(14, 24, 600);
 			color: $color-gray-800;
 			margin-right: 12px;
 			white-space: nowrap;
 		}
 
-		span {
-			@include font(14, 20, 400);
+		span:not(.ppcp-r-connection-status__status-toggle) {
+			@include font(14, 24, 400);
 			color: $color-gray-800;
+		}
+		.ppcp-r-connection-status__status-toggle{
+			line-height: 0;
+		}
+		&--first{
+			&:hover{
+				cursor: pointer;
+			}
 		}
 	}
 

@@ -40,4 +40,71 @@
 	&__checkbox-presentation {
 		@include fake-input-field(2px);
 	}
+
+	&__radio-wrapper {
+		display: flex;
+		gap: 18px;
+		align-items: center;
+		position: relative;
+
+		label {
+			@include font(14, 20, 400);
+			color: $color-gray-800;
+		}
+	}
+
+	&__radio-description {
+		@include font(14, 20, 400);
+		margin: 0;
+		color: $color-gray-800;
+	}
+
+	&__radio-content-additional {
+		padding-left: 38px;
+		padding-top: 18px;
+	}
+}
+
+.components-base-control {
+	&__label {
+		color: $color-gray-900;
+		@include font(13, 16, 600);
+		text-transform: none;
+	}
+
+	&__input {
+		border: 1px solid $color-gray-700;
+		border-radius: 2px;
+		box-shadow: none;
+
+		&:focus {
+			border-color: $color-blueberry;
+		}
+	}
+}
+
+
+input[type='text'] {
+	padding: 7px 11px;
+	@include font(14, 20, 400);
+	@include primaryFont;
+	border-radius: 2px;
+}
+
+select {
+	padding: 7px 27px 7px 11px;
+	@include font(14, 20, 400);
+}
+
+.components-form-toggle.is-checked > .components-form-toggle__track {
+	background-color: $color-blueberry;
+}
+
+.ppcp-r-vertical-text-control {
+	.components-base-control__field {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		margin: 0;
+	}
 }

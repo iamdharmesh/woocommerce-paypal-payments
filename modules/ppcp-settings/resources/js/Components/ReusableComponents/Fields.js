@@ -24,7 +24,7 @@ export const PayPalRdb = ( props ) => {
 	return (
 		<div className="ppcp-r__radio">
 			<input
-				id={ props?.id ? props.id : null }
+				id={ props?.id }
 				className="ppcp-r__radio-value"
 				type="radio"
 				checked={ props.value === props.currentValue }
@@ -33,6 +33,40 @@ export const PayPalRdb = ( props ) => {
 				onChange={ () => props.handleRdbState( props.value ) }
 			/>
 			<span className="ppcp-r__radio-presentation"></span>
+		</div>
+	);
+};
+
+export const PayPalRdbWithContent = ( props ) => {
+	const className = [ 'ppcp-r__radio-wrapper' ];
+
+	if ( props?.className ) {
+		className.push( props.className );
+	}
+
+	return (
+		<div className="ppcp-r__radio-outer-wrapper">
+			<div className={ className }>
+				<PayPalRdb { ...props } />
+				<div className="ppcp-r__radio-content">
+					<label htmlFor={ props?.id }>{ props.label }</label>
+					{ props.description && (
+						<p
+							className="ppcp-r__radio-description"
+							dangerouslySetInnerHTML={ {
+								__html: props.description,
+							} }
+						/>
+					) }
+				</div>
+			</div>
+			{ props?.toggleAdditionalContent &&
+				props.children &&
+				props.value === props.currentValue && (
+					<div className="ppcp-r__radio-content-additional">
+						{ props.children }
+					</div>
+				) }
 		</div>
 	);
 };

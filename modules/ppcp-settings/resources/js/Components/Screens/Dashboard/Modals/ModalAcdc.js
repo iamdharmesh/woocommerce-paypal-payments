@@ -1,7 +1,10 @@
 import PaymentMethodModal from '../../../ReusableComponents/PaymentMethodModal';
 import { __ } from '@wordpress/i18n';
 import { Button } from '@wordpress/components';
-import { PayPalRdb } from '../../../ReusableComponents/Fields';
+import {
+	PayPalRdb,
+	PayPalRdbWithContent,
+} from '../../../ReusableComponents/Fields';
 import { useState } from '@wordpress/element';
 
 const THREED_SECURE_GROUP_NAME = 'threed-secure';
@@ -27,48 +30,40 @@ const ModalAcdc = ( { setModalIsVisible } ) => {
 				) }
 			</p>
 			<div className="ppcp-r-modal__field-rows ppcp-r-modal__field-rows--acdc">
-				<div className="ppcp-r-modal__field-rdb">
-					<PayPalRdb
-						id="no-3d-secure"
-						name={ THREED_SECURE_GROUP_NAME }
-						value="no-3d-secure"
-						currentValue={ threeDSecure }
-						handleRdbState={ setThreeDSecure }
-					/>
-					<label htmlFor="no-3d-secure">
-						{ __( 'No 3D Secure', 'woocommerce-paypal-payments' ) }
-					</label>
-				</div>
-				<div className="ppcp-r-modal__field-rdb">
-					<PayPalRdb
-						id="only-required-3d-secure"
-						name={ THREED_SECURE_GROUP_NAME }
-						value="only-required-3d-secure"
-						currentValue={ threeDSecure }
-						handleRdbState={ setThreeDSecure }
-					/>
-					<label htmlFor="only-required-3d-secure">
-						{ __(
-							'Only when required',
-							'woocommerce-paypal-payments'
-						) }
-					</label>
-				</div>
-				<div className="ppcp-r-modal__field-rdb">
-					<PayPalRdb
-						id="always-3d-secure"
-						name={ THREED_SECURE_GROUP_NAME }
-						value="always-3d-secure"
-						currentValue={ threeDSecure }
-						handleRdbState={ setThreeDSecure }
-					/>
-					<label htmlFor="always-3d-secure">
-						{ __(
-							'Always require 3D Secure',
-							'woocommerce-paypal-payments'
-						) }
-					</label>
-				</div>
+				<PayPalRdbWithContent
+					id="no-3d-secure"
+					name={ THREED_SECURE_GROUP_NAME }
+					value="no-3d-secure"
+					currentValue={ threeDSecure }
+					handleRdbState={ setThreeDSecure }
+					label={ __(
+						'No 3D Secure',
+						'woocommerce-paypal-payments'
+					) }
+				/>
+				<PayPalRdbWithContent
+					id="only-required-3d-secure"
+					name={ THREED_SECURE_GROUP_NAME }
+					value="only-required-3d-secure"
+					currentValue={ threeDSecure }
+					handleRdbState={ setThreeDSecure }
+					label={ __(
+						'Only when required',
+						'woocommerce-paypal-payments'
+					) }
+				/>
+
+				<PayPalRdbWithContent
+					id="always-3d-secure"
+					name={ THREED_SECURE_GROUP_NAME }
+					value="always-3d-secure"
+					currentValue={ threeDSecure }
+					handleRdbState={ setThreeDSecure }
+					label={ __(
+						'Always require 3D Secure',
+						'woocommerce-paypal-payments'
+					) }
+				/>
 			</div>
 			<div className="ppcp-r-modal__field-rows">
 				<div className="ppcp-r-modal__field-row ppcp-r-modal__field-row--save">

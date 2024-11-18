@@ -1,6 +1,6 @@
 import PaymentMethodModal from '../../../ReusableComponents/PaymentMethodModal';
 import { __ } from '@wordpress/i18n';
-import { ToggleControl, Button } from '@wordpress/components';
+import { ToggleControl, Button, TextControl } from '@wordpress/components';
 import { useState } from '@wordpress/element';
 
 const ModalPayPal = ( { setModalIsVisible } ) => {
@@ -23,39 +23,30 @@ const ModalPayPal = ( { setModalIsVisible } ) => {
 		>
 			<div className="ppcp-r-modal__field-rows">
 				<div className="ppcp-r-modal__field-row">
-					<label htmlFor="ppcp-r-paypal-settings-checkout-title">
-						{ __(
+					<TextControl
+						className="ppcp-r-vertical-text-control"
+						label={ __(
 							'Checkout page title',
 							'woocommerce-paypal-payments'
 						) }
-					</label>
-					<input
-						type="text"
-						id="ppcp-r-paypal-settings-checkout-title"
 						value={ paypalSettings.checkoutPageTitle }
-						onInput={ ( e ) =>
-							updateFormValue(
-								'checkoutPageTitle',
-								e.target.value
-							)
+						onChange={ ( newValue ) =>
+							updateFormValue( 'checkoutPageTitle', newValue )
 						}
 					/>
 				</div>
 				<div className="ppcp-r-modal__field-row">
-					<label htmlFor="ppcp-r-paypal-settings-checkout-page-description">
-						{ __(
+					<TextControl
+						className="ppcp-r-vertical-text-control"
+						label={ __(
 							'Checkout page description',
 							'woocommerce-paypal-payments'
 						) }
-					</label>
-					<input
-						type="text"
-						id="ppcp-r-paypal-settings-checkout-page-description"
 						value={ paypalSettings.checkoutPageDescription }
-						onInput={ ( e ) =>
+						onChange={ ( newValue ) =>
 							updateFormValue(
 								'checkoutPageDescription',
-								e.target.value
+								newValue
 							)
 						}
 					/>

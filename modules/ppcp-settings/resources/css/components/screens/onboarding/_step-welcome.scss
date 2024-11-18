@@ -32,8 +32,7 @@
 		margin: 0 0 24px 0;
 	}
 	.ppcp-r-toggle-block__toggled-content > button{
-		padding: 6px 12px;
-		@include font(13, 20, 500);
+		@include small-button;
 		color: $color-white;
 		border: none;
 	}
