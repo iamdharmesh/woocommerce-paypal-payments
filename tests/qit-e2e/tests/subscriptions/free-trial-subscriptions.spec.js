@@ -7,6 +7,7 @@ const {
 	fillCheckoutForm,
 	clearCart,
 	blockFillBillingDetails,
+	selectPaymentMethod,
 } = require( '../utils/checkout' );
 const config = require( '../../config/config.json' );
 
@@ -29,7 +30,7 @@ test.skip( 'PayPal logged-in user free trial subscription without payment token 
 		.locator( '.blockUI.blockOverlay' )
 		.last()
 		.waitFor( { state: 'detached' } );
-	await page.locator( 'li.payment_method_ppcp-gateway' ).click();
+	await selectPaymentMethod( page, 'gateway' );
 	const popup = await openPaypalPopup( page );
 	await loginIntoPaypal( popup );
 	await Promise.all( [

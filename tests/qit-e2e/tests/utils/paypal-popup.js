@@ -121,6 +121,17 @@ export const loginIntoPaypal = async ( popup, retry = true ) => {
 		await nextButtonLocator.click();
 	}
 
+	// Wait for the spinner to disappear
+	await popup
+		.locator( '.transitioning.spinnerWithLockIcon.spinner' )
+		.last()
+		.waitFor( { state: 'detached' } );
+	if (
+		await popup.getByText( 'Log in with a password instead' ).isVisible()
+	) {
+		await popup.getByText( 'Log in with a password instead' ).click();
+	}
+
 	try {
 		await popup.fill( '[name="login_password"]', PAYPAL_CUSTOMER_PASSWORD, {
 			timeout: 5000,

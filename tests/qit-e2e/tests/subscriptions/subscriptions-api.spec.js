@@ -12,6 +12,7 @@ const {
 	fillCheckoutForm,
 	expectOrderReceivedPage,
 	clearCart,
+	selectPaymentMethod,
 } = require( '../utils/checkout' );
 const {
 	createProduct,
@@ -299,6 +300,7 @@ test.describe( 'Subscriber purchase a Subscription', () => {
 		await page.goto( '/classic-checkout' );
 		await fillCheckoutForm( page );
 
+		await selectPaymentMethod( page, 'gateway' );
 		const popup = await openPaypalPopup( page );
 		await loginIntoPaypal( popup );
 
@@ -465,6 +467,7 @@ test.describe( 'Plan connected display buttons', () => {
 		);
 
 		await page.goto( '/classic-checkout' );
+		await selectPaymentMethod( page, 'gateway' );
 		await expect(
 			page.locator( '#ppc-button-ppcp-gateway' )
 		).toBeVisible();

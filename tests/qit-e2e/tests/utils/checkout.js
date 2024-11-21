@@ -85,3 +85,32 @@ export async function clearCart( page ) {
 		await page.locator( '.woocommerce-message' ).waitFor();
 	}
 }
+
+/**
+ * Select payment method
+ *
+ * @param {Page}    page            Playwright page object
+ * @param {string}  paymentMethod   Payment method name
+ * @param {boolean} isBlockCheckout Is block checkout?
+ */
+export async function selectPaymentMethod( page, paymentMethod ) {
+	// Wait for overlay to disappear
+	await page
+		.locator( '.blockUI.blockOverlay' )
+		.last()
+		.waitFor( { state: 'detached' } );
+
+	// Wait for payment method to appear
+	const payMethod = await page
+		.locator(
+			`ul.wc_payment_methods li.payment_method_ppcp-${ paymentMethod } label`
+		)
+		.first();
+	await expect( payMethod ).toBeVisible();
+
+	// Select payment method
+	await page
+		.locator( `label[for="payment_method_ppcp-${ paymentMethod }"]` )
+		.waitFor();
+	await payMethod.click();
+}

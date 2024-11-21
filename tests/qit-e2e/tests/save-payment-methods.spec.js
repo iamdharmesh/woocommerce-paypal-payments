@@ -9,6 +9,7 @@ const {
 const {
 	fillCheckoutForm,
 	expectOrderReceivedPage,
+	selectPaymentMethod,
 } = require( './utils/checkout' );
 
 async function expectContinuation( page ) {
@@ -56,6 +57,7 @@ test.skip( 'PayPal add payment method', async ( { page } ) => {
 	await loginAsCustomer( page );
 	await page.goto( '/my-account/add-payment-method' );
 
+	await selectPaymentMethod( page, 'gateway' );
 	const popup = await openPaypalPopup( page );
 	await loginIntoPaypal( popup );
 	popup.locator( '#consentButton' ).click();
@@ -80,9 +82,9 @@ test( 'ACDC add payment method', async ( { page } ) => {
 		.frameLocator( 'iframe[title="paypal_card_expiry_field"]' )
 		.locator( 'input.card-field-expiry' );
 	await expirationDate.click();
-    await page.keyboard.type( '1' );
+	await page.keyboard.type( '1' );
 	await page.keyboard.type( '2' );
-    await page.waitForTimeout( 500 );
+	await page.waitForTimeout( 500 );
 	await page.keyboard.type( '2' );
 	await page.keyboard.type( '5' );
 

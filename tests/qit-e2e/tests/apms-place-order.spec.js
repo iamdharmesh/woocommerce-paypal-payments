@@ -5,6 +5,7 @@ const {
 	fillCheckoutForm,
 	expectOrderReceivedPage,
 	acceptTerms,
+	selectPaymentMethod,
 } = require( './utils/checkout' );
 const {
 	openPaypalPopup,
@@ -39,6 +40,7 @@ test( 'PayPal APM button place order', async ( { page } ) => {
 
 	await fillCheckoutForm( page );
 
+	await selectPaymentMethod( page, 'gateway' );
 	const popup = await openPaypalPopup( page, {
 		fundingSource: config.apm_id,
 	} );
@@ -63,6 +65,7 @@ test.skip( 'PayPal APM button place order when redirect fails', async ( {
 
 	await page.evaluate( 'PayPalCommerceGateway.ajax.approve_order = null' );
 
+	await selectPaymentMethod( page, 'gateway' );
 	const popup = await openPaypalPopup( page, {
 		fundingSource: config.apm_id,
 	} );
