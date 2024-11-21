@@ -69,3 +69,16 @@ jobs:
     - name: Run E2E tests
       shell: bash
       run: npm run test:e2e -- --env_file .env --plugin woocommerce-gateway-stripe:bootstrap
+
+    - name: Set the path in an env var
+      if: ${{ failure() }}
+      run: echo "E2E_REPORT_PATH=$(./vendor/bin/qit e2e-report --dir_only --local)/playwright" >> $GITHUB_ENV
+
+    - name: Upload E2E test results
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: E2E-test-results
+        path: ${{ env.E2E_REPORT_PATH }}
+        if-no-files-found: ignore
+        retention-days: 2
