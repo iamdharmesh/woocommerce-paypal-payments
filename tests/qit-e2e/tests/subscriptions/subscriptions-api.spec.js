@@ -108,12 +108,15 @@ test.describe.serial( 'Subscriptions Merchant', () => {
 
 		const postId = await page.locator( '#post_ID' ).inputValue();
 		await qit.setEnv( 'SUBSCRIPTION_PRODUCT_ID', postId );
+		const paypalProductId = await page
+			.locator( '#pcpp-product a' )
+			.textContent();
 
 		const message = await page.locator( '.notice-success' );
 		await expect( message ).toContainText( 'Product published.' );
 
-		const products = await request.get(
-			'https://api-m.sandbox.paypal.com/v1/catalogs/products?page_size=100&page=1&total_required=true',
+		const productRes = await request.get(
+			`https://api-m.sandbox.paypal.com/v1/catalogs/products/${ paypalProductId }`,
 			{
 				headers: {
 					Authorization: `Bearer ${ accessToken }`,
@@ -121,12 +124,10 @@ test.describe.serial( 'Subscriptions Merchant', () => {
 				},
 			}
 		);
-		expect( products.ok() ).toBeTruthy();
+		console.log( productRes );
+		expect( productRes.ok() ).toBeTruthy();
 
-		const productList = await products.json();
-		const product = productList.products.find( ( p ) => {
-			return p.name === productTitle;
-		} );
+		const product = await productRes.json();
 		await expect( product.id ).toBeTruthy;
 
 		product_id = product.id;
@@ -170,8 +171,12 @@ test.describe.serial( 'Subscriptions Merchant', () => {
 		const message = await page.locator( '.notice-success' );
 		await expect( message ).toContainText( 'Product updated.' );
 
-		const products = await request.get(
-			'https://api-m.sandbox.paypal.com/v1/catalogs/products?page_size=100&page=1&total_required=true',
+		const paypalProductId = await page
+			.locator( '#pcpp-product a' )
+			.textContent();
+
+		const productRes = await request.get(
+			`https://api-m.sandbox.paypal.com/v1/catalogs/products/${ paypalProductId }`,
 			{
 				headers: {
 					Authorization: `Bearer ${ accessToken }`,
@@ -179,13 +184,11 @@ test.describe.serial( 'Subscriptions Merchant', () => {
 				},
 			}
 		);
-		expect( products.ok() ).toBeTruthy();
+		expect( productRes.ok() ).toBeTruthy();
 
-		const productList = await products.json();
-		const product = productList.products.find( ( p ) => {
-			return p.name === `Updated ${ productTitle }`;
-		} );
-		await expect( product.id ).toBeTruthy;
+		const product = await productRes.json();
+		await expect( product.id ).toBeTruthy();
+		await expect( product.name ).toBe( `Updated ${ productTitle }` );
 
 		const plan = await request.get(
 			`https://api-m.sandbox.paypal.com/v1/billing/plans/${ plan_id }`,
