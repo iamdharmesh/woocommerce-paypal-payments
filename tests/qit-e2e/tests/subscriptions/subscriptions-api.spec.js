@@ -124,11 +124,10 @@ test.describe.serial( 'Subscriptions Merchant', () => {
 				},
 			}
 		);
-		console.log( productRes );
 		expect( productRes.ok() ).toBeTruthy();
 
 		const product = await productRes.json();
-		await expect( product.id ).toBeTruthy;
+		await expect( product.id ).toBeTruthy();
 
 		product_id = product.id;
 
@@ -233,8 +232,12 @@ test( 'Create new free trial subscription product', async ( {
 	const message = await page.locator( '.notice-success' );
 	await expect( message ).toContainText( 'Product published.' );
 
-	const products = await request.get(
-		'https://api-m.sandbox.paypal.com/v1/catalogs/products?page_size=100&page=1&total_required=true',
+	const paypalProductId = await page
+		.locator( '#pcpp-product a' )
+		.textContent();
+
+	const productRes = await request.get(
+		`https://api-m.sandbox.paypal.com/v1/catalogs/products/${ paypalProductId }`,
 		{
 			headers: {
 				Authorization: `Bearer ${ accessToken }`,
@@ -242,12 +245,9 @@ test( 'Create new free trial subscription product', async ( {
 			},
 		}
 	);
-	expect( products.ok() ).toBeTruthy();
+	expect( productRes.ok() ).toBeTruthy();
 
-	const productList = await products.json();
-	const product = productList.products.find( ( p ) => {
-		return p.name === productTitle;
-	} );
+	const product = await productRes.json();
 	await expect( product.id ).toBeTruthy;
 
 	const plans = await request.get(
