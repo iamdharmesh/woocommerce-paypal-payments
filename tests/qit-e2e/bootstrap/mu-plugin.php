@@ -3,6 +3,19 @@
  * Plugin name: WooCommerce PayPal Payments E2E Test plugin
  */
 
+// Disable WP CLI notices
+if ( ! isset( $_SERVER['HTTP_HOST'] ) ) {
+	error_reporting(
+		E_ALL
+		& ~E_PARSE
+		& ~E_NOTICE
+		& ~E_USER_NOTICE
+		& ~E_STRICT
+		& ~E_DEPRECATED
+		& ~E_USER_DEPRECATED
+	);
+}
+
 add_filter( 'woocommerce_order_number', 'wc_paypal_payments_woocommerce_order_number' );
 
 /**
