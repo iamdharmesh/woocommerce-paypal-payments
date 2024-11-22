@@ -102,7 +102,10 @@
     "prearchive": "rm -rf $npm_package_name.zip",
     "archive": "zip -r $npm_package_name.zip . -x **.git/\\* **node_modules/\\*",
     "postarchive": "yarn run archive:cleanup && rm -rf $npm_package_name && unzip $npm_package_name.zip -d $npm_package_name && rm $npm_package_name.zip && zip -r $npm_package_name.zip $npm_package_name && rm -rf $npm_package_name",
-    "archive:cleanup": "zip -d $npm_package_name.zip .env* .ddev/\\* \\*.idea/\\* .editorconfig tests/\\* .github/\\* .psalm/\\* wordpress_org_assets/\\* \\*.DS_Store \\*README.md \\*.gitattributes \\*.gitignore \\*composer.json \\*composer.lock patchwork.json phpunit.xml.dist .phpunit.result.cache phpcs.xml* psalm*.xml* playwright.config.js wp-cli.yml \\*.babelrc \\*package.json \\*webpack.config.js \\*yarn.lock \\*.travis.yml\\"
+    "archive:cleanup": "zip -d $npm_package_name.zip .env* .ddev/\\* \\*.idea/\\* .editorconfig tests/\\* .github/\\* .psalm/\\* wordpress_org_assets/\\* \\*.DS_Store \\*README.md \\*.gitattributes \\*.gitignore \\*composer.json \\*composer.lock patchwork.json phpunit.xml.dist .phpunit.result.cache phpcs.xml* psalm*.xml* playwright.config.js wp-cli.yml \\*.babelrc \\*package.json \\*webpack.config.js \\*yarn.lock \\*.travis.yml\\",
+    "test:e2e": "./vendor/bin/qit run:e2e woocommerce-paypal-payments ./tests/qit-e2e --source ./",
+    "test:e2e-local": "./vendor/bin/qit run:e2e woocommerce-paypal-payments ./tests/qit-e2e --source ./ --env_file ./tests/qit-e2e/config/.env",
+    "test:upload-tags": "sh ./tests/qit-e2e/bin/upload-tags.sh"
   },
   "config": {
     "wp_org_slug": "woocommerce-paypal-payments"

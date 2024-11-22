@@ -1,0 +1,4 @@
+[
+  "@woocommerce/woocommerce-rest-api",
+  "dotenv"
+]

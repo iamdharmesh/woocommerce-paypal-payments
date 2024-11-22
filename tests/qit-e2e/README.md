@@ -19,4 +19,3 @@ It does not open browser in macOS, to make it work use `npx`:
 $ cd tests/Playwright
 $ npx playwright test
 ```
-
