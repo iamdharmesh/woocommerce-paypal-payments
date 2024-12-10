@@ -46,9 +46,6 @@ jobs:
       shell: bash
       run: |
         npm run build
-    - name: Install composer dependencies
-      shell: bash
-      run: composer install --no-progress
 
     # QIT CLI
     - name: Install QIT via composer
