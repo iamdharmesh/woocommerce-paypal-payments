@@ -68,7 +68,7 @@ jobs:
 
     - name: Run E2E tests
       shell: bash
-      run: ./vendor/bin/qit run:e2e woocommerce-paypal-payments --source ./ --plugin woocommerce --plugin woocommerce-subscriptions --plugin woocommerce-gateway-stripe:test:setup-tests --theme storefront --env_file .env
+      run: ./vendor/bin/qit run:e2e woocommerce-paypal-payments --source ./ --plugin woocommerce --plugin woocommerce-subscriptions --plugin woocommerce-gateway-stripe:test:setup-tests --env_file .env
 
     - name: Set the path in an env var
       if: ${{ failure() }}
